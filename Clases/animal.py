@@ -41,4 +41,3 @@ class Ave(Animal):
 
     def mostrar_info(self) -> str:
         return super().mostrar_info() + f", Tipo de ave: {self.tipo}"
-    
