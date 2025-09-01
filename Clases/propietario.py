@@ -1,6 +1,6 @@
 # Se crea la clase propietario del animal
 class Propietario:
-    def __init__(self, nombre, telefono, direccion):
+    def __init__(self, nombre, telefono, direccion) -> None:
         self.nombre = nombre
         self.telefono = telefono
         self.direccion = direccion
