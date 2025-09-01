@@ -9,6 +9,7 @@ class Animal:
         self.especie = "Desconocida"
 
     def mostrar_info(self) -> str:
+
         return f"Nombre: {self.nombre}, Edad: {self.edad}, Especie: {self.especie}, Propietario: {self.propietario.nombre}"
 
 
