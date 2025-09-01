@@ -1,13 +1,15 @@
 # Se crea la clase Animal y sus subclases Gato, Perro y Ave
+from .propietario import Propietario
+
 class Animal:
-    def __init__(self, nombre:str, edad:int, propietario:str) -> str:
+    def __init__(self, nombre:str, edad:int, propietario: Propietario) -> None:
         self.nombre = nombre
         self.edad = edad
         self.propietario = propietario
         self.especie = "Desconocida"
 
     def mostrar_info(self) -> str:
-        return f"Nombre: {self.nombre}, Edad: {self.edad}, Especie: {self.especie}, Propietario: {self.propietario}"
+        return f"Nombre: {self.nombre}, Edad: {self.edad}, Especie: {self.especie}, Propietario: {self.propietario.nombre}"
 
 
 # Subclase Perro
