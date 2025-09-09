@@ -82,7 +82,7 @@ from pydantic import BaseModel, constr
 
 # ---- Propietario ----
 class PropietarioBase(BaseModel):
-    nombre: constr(min_length=1, max_length=100)
+    nombre: constr(min_length=1, max_length=100) #type: ignore
     telefono: constr(min_length=7, max_length=20)
     direccion: constr(min_length=5, max_length=200)
 
