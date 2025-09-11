@@ -23,7 +23,7 @@ class Propietario(Base):
     usuario = relationship("Usuario", back_populates="propietarios")
 
     def mostrar_info(self) -> str:
-        return f"Nombre: {self.nombre}, Telefono: {self.telefono}, Dirección: {self.direccion}"
+        return f"Nombre: {self.primer_nombre_propietario},{self.segundo_nombre_propietario},{self.primer_apellido_propietario}, Telefono: {self.telefono}, Dirección: {self.direccion}"
     
 """ Se procede a realizar las validaciones por Pydantic """
     

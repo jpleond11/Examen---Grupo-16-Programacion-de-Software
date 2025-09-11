@@ -1,135 +1,45 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
+from uuid import UUID
+from datetime import date, datetime
 
-Base = declarative_base()
-
-class PropietarioORM(Base):
-    __tablename__ = "propietarios"
-
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100), nullable=False)
-    telefono = Column(String(20), nullable=False)
-    direccion = Column(String(200), nullable=False)
-
-    animales = relationship("AnimalORM", back_populates="propietario")
-
-# Clase base Animal
-class AnimalORM(Base):
+class Animal(Base):
     __tablename__ = "animales"
 
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String(100), nullable=False)
-    edad = Column(Integer, nullable=False)
-    especie = Column(String(50), default="Desconocida")
-    tipo = Column(String(50))  # discriminador de herencia
+    id_animal = Column(UUID(as_uuid=True), primary_key=True, default=UUID.uuid4, unique=True, nullable=False)
+    nombre_animal = Column(String(50), nullable=False)
+    especie_animal = Column(String(20), nullable=False)
+    fecha_nacimiento_animal = Column(date, nullable=False)
 
-    propietario_id = Column(Integer, ForeignKey("propietarios.id"), nullable=False)
-    propietario = relationship("PropietarioORM", back_populates="animales")
-    __mapper_args__ = {
-        "polymorphic_on": tipo,
-        "polymorphic_identity": "animal"
-    }
+    usuario_id_creacion = Column(Integer, ForeignKey('usuarios.id_usuario'), nullable=False)
+    usuario_id_edicion = Column(Integer, ForeignKey('usuarios.id_usuario'), nullable=False)
+    fecha_creacion = Column(datetime, default=datetime.now, nullable=False)
+    fecha_actualizacion = Column(datetime, default=datetime.now, onupdate=datetime.now)
 
-    vacunas = relationship("VacunaORM", back_populates="animal")
-    citas = relationship("CitaORM", back_populates="animal")
+    """ Relaciones """
+    propietario = relationship("Propietario", back_populates="animales")
+    categoria_animal = relationship("Propietario", back_populates="categorias_animales")
 
     def mostrar_info(self) -> str:
-        return f"Nombre: {self.nombre}, Edad: {self.edad}, Especie: {self.especie}, Propietario: {self.propietario.nombre}"
+        return f"Nombre: {self.nombre_animal}, Fecha de Nacimiento: {self.fecha_nacimiento_animal}, Especie: {self.especie_animal}"
 
-# Subclase Perro
-class PerroORM(AnimalORM):
-    __tablename__ = "perros"
+""" Se procede a realizar las validaciones por Pydantic """
+from pydantic import BaseModel, constr, Field
+from datetime import date, datetime
 
-    id = Column(Integer, ForeignKey("animales.id"), primary_key=True)
-    raza = Column(String(50))
+class AnimalSchema(BaseModel):
+    id_animal: UUID | None = Field(default=None)
 
-    __mapper_args__ = {
-        "polymorphic_identity": "perro"
-    }
+    nombre_animal: constr(strip_whitespace=True, min_length=1, max_length=50) #type: ignore
+    especie_animal: constr(strip_whitespace=True, min_length=1, max_length=20) #type: ignore
+    fecha_nacimiento_animal: date
 
-    def mostrar_info(self):
-        return super().mostrar_info() + f", Raza: {self.raza}"
+    usuario_id_creacion: UUID  
+    usuario_id_edicion: UUID  
 
-# Subclase Gato
-class GatoORM(AnimalORM):
-    __tablename__ = "gatos"
+    fecha_creacion: datetime | None = None
+    fecha_actualizacion: datetime | None = None
 
-    id = Column(Integer, ForeignKey("animales.id"), primary_key=True)
-    color = Column(String(50))
-
-    __mapper_args__ = {
-        "polymorphic_identity": "gato"
-    }
-
-    def mostrar_info(self):
-        return super().mostrar_info() + f", Color: {self.color}"
-
-# Subclase Ave
-class AveORM(AnimalORM):
-    __tablename__ = "aves"
-
-    id = Column(Integer, ForeignKey("animales.id"), primary_key=True)
-    tipo_ave = Column(String(50))  # Ejemplo: "Loro", "Canario"
-
-    __mapper_args__ = {
-        "polymorphic_identity": "ave"
-    }
-
-    def mostrar_info(self):
-        return super().mostrar_info() + f", Tipo de ave: {self.tipo_ave}"
-    
-from pydantic import BaseModel, constr
-
-# ---- Propietario ----
-class PropietarioBase(BaseModel):
-    nombre: constr(min_length=1, max_length=100) #type: ignore
-    telefono: constr(min_length=7, max_length=20)
-    direccion: constr(min_length=5, max_length=200)
-
-class PropietarioCreate(PropietarioBase):
-    pass
-
-class PropietarioRead(PropietarioBase):
-    id: int
     class Config:
-        orm_mode = True
+        from_attributes = True 
 
-
-# ---- Animal ----
-class AnimalBase(BaseModel):
-    nombre: constr(min_length=1, max_length=100)
-    edad: int
-
-class AnimalCreate(AnimalBase):
-    propietario_id: int
-
-class AnimalRead(AnimalBase):
-    id: int
-    especie: str
-    propietario: PropietarioRead
-    class Config:
-        orm_mode = True
-
-
-# ---- Perro ----
-class PerroCreate(AnimalCreate):
-    raza: str
-
-class PerroRead(AnimalRead):
-    raza: str
-
-
-# ---- Gato ----
-class GatoCreate(AnimalCreate):
-    color: str
-
-class GatoRead(AnimalRead):
-    color: str
-
-
-# ---- Ave ----
-class AveCreate(AnimalCreate):
-    tipo_ave: str
-
-class AveRead(AnimalRead):
-    tipo_ave: str
