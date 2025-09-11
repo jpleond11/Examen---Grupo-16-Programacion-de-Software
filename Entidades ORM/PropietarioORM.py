@@ -1,10 +1,9 @@
-from pydantic import BaseModel, constr
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 import uuid
 from datetime import datetime
 
-class PropietarioORM(Base):
+class Propietario(Base):
     __tablename__ = "propietarios"
 
     id_propietario = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False, unique=True)
@@ -20,12 +19,13 @@ class PropietarioORM(Base):
     fecha_creacion = Column(datetime, default=datetime.now, nullable=False)
     fecha_actualizacion = Column(datetime, default=datetime.now, onupdate=datetime.now)
 
-    usuarios = relationship("UsuarioORM", back_populates="propietario")
+    """ Relaciones """
+    usuario = relationship("Usuario", back_populates="propietarios")
 
     def mostrar_info(self) -> str:
         return f"Nombre: {self.nombre}, Telefono: {self.telefono}, Dirección: {self.direccion}"
     
-""" Se procede a realizar las validaciones por Pydantic """    
+""" Se procede a realizar las validaciones por Pydantic """
     
 from pydantic import BaseModel, constr, Field
 from typing import Optional
@@ -34,10 +34,10 @@ from datetime import datetime
 class PropietarioBase(BaseModel):
     primer_nombre_propietario: constr(strip_whitespace=True, min_length=2, max_length=50) #type: ignore
     segundo_nombre_propietario: Optional[constr(strip_whitespace=True, max_length=50)] = None #type:ignore
-    primer_apellido_propietario: constr(strip_whitespace=True, min_length=2, max_length=50)
-    segundo_apellido_propietario: constr(strip_whitespace=True, min_length=2, max_length=50)
-    telefono: constr(strip_whitespace=True, min_length=7, max_length=20)
-    direccion: constr(strip_whitespace=True, min_length=5, max_length=200)
+    primer_apellido_propietario: constr(strip_whitespace=True, min_length=2, max_length=50) #type:ignore
+    segundo_apellido_propietario: constr(strip_whitespace=True, min_length=2, max_length=50) #type:ignore
+    telefono: constr(strip_whitespace=True, min_length=7, max_length=20) #type:ignore
+    direccion: constr(strip_whitespace=True, min_length=5, max_length=200) #type:ignore
 
     usuario_id_creacion: int = Field(..., gt=0)
     """ obligatorio, debe ser > 0 """
@@ -50,12 +50,12 @@ class PropietarioCreate(PropietarioBase):
 
 class PropietarioUpdate(BaseModel):
     """ Esquema para actualizar un propietario (campos opcionales)."""
-    primer_nombre_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)]
-    segundo_nombre_propietario: Optional[constr(strip_whitespace=True, max_length=50)]
-    primer_apellido_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)]
-    segundo_apellido_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)]
-    telefono: Optional[constr(strip_whitespace=True, min_length=7, max_length=20)]
-    direccion: Optional[constr(strip_whitespace=True, min_length=5, max_length=200)]
+    primer_nombre_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)] #type:ignore
+    segundo_nombre_propietario: Optional[constr(strip_whitespace=True, max_length=50)] #type:ignore
+    primer_apellido_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)] #type:ignore
+    segundo_apellido_propietario: Optional[constr(strip_whitespace=True, min_length=2, max_length=50)] #type:ignore
+    telefono: Optional[constr(strip_whitespace=True, min_length=7, max_length=20)] #type:ignore
+    direccion: Optional[constr(strip_whitespace=True, min_length=5, max_length=200)] #type:ignore
     usuario_id_edicion: Optional[int] = Field(None, gt=0)
 
 class PropietarioResponse(PropietarioBase):
