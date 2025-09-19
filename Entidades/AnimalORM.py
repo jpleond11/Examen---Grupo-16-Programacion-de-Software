@@ -1,0 +1,46 @@
+from database.config import Base
+from sqlalchemy import Column, String, ForeignKey, Date, DateTime
+from sqlalchemy.orm import relationship
+from uuid import UUID, uuid4
+from datetime import datetime
+
+
+class Animal(Base):
+    __tablename__ = "animales"
+
+    id_animal = Column(
+        UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
+    )
+    nombre_animal = Column(String(50), nullable=False)
+    especie_animal = Column(String(20), nullable=False)
+    fecha_nacimiento_animal = Column(Date, nullable=False)
+
+    propietario_id = Column(
+        UUID(as_uuid=True), ForeignKey("propietarios.id_propietario"), nullable=False
+    )
+    categoria_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("categoria_animal.id_categoria_animal"),
+        nullable=False,
+    )
+
+    usuario_id_creacion = Column(
+        UUID(as_uuid=True), ForeignKey("usuarios.id_usuario"), nullable=False
+    )
+    usuario_id_edicion = Column(
+        UUID(as_uuid=True), ForeignKey("usuarios.id_usuario"), nullable=True
+    )
+    fecha_creacion = Column(DateTime, default=datetime.now, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+
+    """ Relaciones """
+    propietario = relationship("Propietario", back_populates="animales")
+    categoria_animal = relationship("CategoriaAnimal", back_populates="animales")
+    citas = relationship("Cita", back_populates="animal", cascade="all, delete-orphan")
+
+    def mostrar_info(self) -> str:
+        return (
+            f"Nombre: {self.nombre_animal}, "
+            f"Especie: {self.especie_animal}, "
+            f"Fecha de Nacimiento: {self.fecha_nacimiento_animal}"
+        )
