@@ -1,7 +1,8 @@
 from database.config import Base
 from sqlalchemy import Column, String, Date, Text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 
 class Usuario(Base):
