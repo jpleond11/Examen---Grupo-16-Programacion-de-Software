@@ -9,6 +9,28 @@ from datetime import datetime
 class Propietario(Base):
     __tablename__ = "propietarios"
 
+    """
+    Atributos:
+        id_propietario (UUID): Identificador único.
+        primer_nombre_propietario (str): Primer nombre.
+        segundo_nombre_propietario (str): Segundo nombre (opcional).
+        primer_apellido_propietario (str): Primer apellido.
+        segundo_apellido_propietario (str): Segundo apellido.
+        telefono (str): Número de contacto.
+        direccion (str): Dirección de residencia.
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        usuario: Usuario asociado.
+        animales: Lista de animales del propietario.
+
+    Métodos:
+        mostrar_info(): Retorna información básica del propietario.
+    """
+
     id_propietario = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
     )

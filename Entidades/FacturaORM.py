@@ -9,6 +9,25 @@ from datetime import datetime
 class Factura(Base):
     __tablename__ = "facturas"
 
+    """
+    Atributos:
+        id_factura (UUID): Identificador único.
+        monto_factura (float): Valor total de la factura.
+        fecha_emision (datetime): Fecha de emisión.
+        descripcion_factura (str): Descripción de la factura.
+        cita_id (UUID): Referencia a la cita asociada.
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        cita: Relación con la cita correspondiente.
+
+    Métodos:
+        __str__(): Devuelve una representación en texto con la información de la factura.
+    """
+
     id_factura = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
     )

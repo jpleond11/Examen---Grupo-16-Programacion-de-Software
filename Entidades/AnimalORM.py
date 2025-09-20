@@ -9,6 +9,26 @@ from datetime import datetime
 class Animal(Base):
     __tablename__ = "animales"
 
+    """
+    Atributos:
+        id_animal (UUID): Identificador único.
+        nombre_animal (str): Nombre del animal.
+        especie_animal (str): Especie del animal.
+        fecha_nacimiento_animal (date): Fecha de nacimiento.
+        propietario_id (UUID): Referencia al propietario.
+        categoria_id (UUID): Referencia a la categoría.
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        propietario, categoria_animal, citas.
+
+    Métodos:
+        mostrar_info(): Devuelve una cadena con información básica del animal.
+    """
+
     id_animal = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
     )

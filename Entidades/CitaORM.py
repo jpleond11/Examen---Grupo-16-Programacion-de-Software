@@ -9,6 +9,27 @@ from datetime import datetime
 class Cita(Base):
     __tablename__ = "citas"
 
+    """
+    Atributos:
+        id_cita (UUID): Identificador único.
+        fecha_inicio_cita (datetime): Fecha y hora de inicio.
+        fecha_final_cita (datetime): Fecha y hora de finalización.
+        motivo_cita (str): Motivo de la cita.
+        animal_id (UUID): Referencia al animal.
+        vacuna_id (UUID): Referencia a la vacuna.
+        veterinario_id (UUID): Referencia al veterinario.
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        animal, vacuna, facturas, veterinario.
+
+    Métodos:
+        agendar_cita(): Retorna una cadena con la cita agendada.
+    """
+
     id_cita = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
     )
