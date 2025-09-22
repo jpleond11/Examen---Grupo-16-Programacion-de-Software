@@ -1,12 +1,31 @@
 from database.config import Base
 from sqlalchemy import Column, String, Date, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from uuid import UUID, uuid4
+from uuid import uuid4
 from datetime import datetime
 
 
 class Vacuna(Base):
     __tablename__ = "vacunas"
+
+    """
+    Atributos:
+        id_vacuna (UUID): Identificador único.
+        nombre_vacuna (str): Nombre de la vacuna.
+        fecha_aplicacion_vacuna (date): Fecha de aplicación.
+        proxima_dosis_vacuna (date): Fecha de la próxima dosis (opcional).
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        citas: Citas en las que se aplicó la vacuna.
+
+    Métodos:
+        mostrar_info(): Retorna información resumida de la vacuna.
+    """
 
     id_vacuna = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
