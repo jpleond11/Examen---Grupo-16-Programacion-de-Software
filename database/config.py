@@ -14,7 +14,10 @@ load_dotenv()
 
 # Configuración de la base de datos Neon PostgreSQL
 # Obtener la URL completa de conexión desde las variables de entorno
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = (
+    os.getenv("DATABASE_URL")
+    or "postgresql://neondb_owner:npg_31HWAoYpQMJe@ep-curly-shape-adaq5kuo-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+)
 
 # Crear el motor de SQLAlchemy
 engine = create_engine(
@@ -46,4 +49,14 @@ def create_tables():
     """
     Crear todas las tablas definidas en los modelos
     """
+    # Importar todos los modelos para que se registren en Base.metadata
+    from Entidades.AnimalORM import Animal
+    from Entidades.CategoriaAnimalORM import CategoriaAnimal
+    from Entidades.CitaORM import Cita
+    from Entidades.FacturaORM import Factura
+    from Entidades.PropietarioORM import Propietario
+    from Entidades.UsuarioORM import Usuario
+    from Entidades.VacunaORM import Vacuna
+    from Entidades.VeterinarioORM import Veterinario
+
     Base.metadata.create_all(bind=engine)

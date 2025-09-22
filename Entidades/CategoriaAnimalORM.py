@@ -1,11 +1,25 @@
 from database.config import Base
 from sqlalchemy import Column, String
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 
 class CategoriaAnimal(Base):
     __tablename__ = "categoria_animal"
+
+    """
+    Atributos:
+        id_categoria_animal (UUID): Identificador único.
+        nombre_categoria (str): Nombre de la categoría.
+        descripcion (str): Descripción opcional.
+
+    Relaciones:
+        animales: Lista de animales asociados.
+
+    Métodos:
+        __repr__(): Representación en cadena del objeto.
+    """
 
     id_categoria_animal = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
