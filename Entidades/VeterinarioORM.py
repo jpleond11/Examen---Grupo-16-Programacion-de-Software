@@ -1,12 +1,37 @@
-from database.config import Base
-from sqlalchemy import Column, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from uuid import UUID, uuid4
 from datetime import datetime
+from uuid import uuid4
+
+from sqlalchemy import Column, DateTime, ForeignKey, String
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
+from database.config import Base
 
 
 class Veterinario(Base):
     __tablename__ = "veterinarios"
+
+    """
+    Atributos:
+        id_veterinario (UUID): Identificador único.
+        primer_nombre_veterinario (str): Primer nombre.
+        segundo_nombre_veterinario (str): Segundo nombre (opcional).
+        primer_apellido_veterinario (str): Primer apellido.
+        segundo_apellido_veterinario (str): Segundo apellido (opcional).
+        telefono (str): Número de contacto.
+        email (str): Correo electrónico (único).
+        especialidad (str): Especialidad médica.
+        usuario_id_creacion (UUID): Usuario que creó el registro.
+        usuario_id_edicion (UUID): Usuario que editó el registro.
+        fecha_creacion (datetime): Fecha de creación.
+        fecha_actualizacion (datetime): Última actualización.
+
+    Relaciones:
+        citas: Lista de citas atendidas por el veterinario.
+
+    Métodos:
+        __str__(): Retorna una representación legible del veterinario.
+    """
 
     id_veterinario = Column(
         UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False
