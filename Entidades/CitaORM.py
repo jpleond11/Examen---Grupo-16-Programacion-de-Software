@@ -41,7 +41,7 @@ class Cita(Base):
         UUID(as_uuid=True), ForeignKey("animales.id_animal"), nullable=False
     )
     vacuna_id = Column(
-        UUID(as_uuid=True), ForeignKey("vacunas.id_vacuna"), nullable=False
+        UUID(as_uuid=True), ForeignKey("vacunas.id_vacuna"), nullable=True
     )
     veterinario_id = Column(
         UUID(as_uuid=True), ForeignKey("veterinarios.id_veterinario"), nullable=False
