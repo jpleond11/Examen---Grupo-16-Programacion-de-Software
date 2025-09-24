@@ -51,7 +51,9 @@ class Propietario(Base):
     fecha_actualizacion = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     """ Relaciones """
-    usuario = relationship("Usuario", back_populates="propietarios")
+    usuario_creador = relationship("Usuario", foreign_keys=[usuario_id_creacion], back_populates="propietarios_creados")
+    usuario_editor = relationship("Usuario", foreign_keys=[usuario_id_edicion], back_populates="propietarios_editados")
+
     animales = relationship(
         "Animal", back_populates="propietario", cascade="all, delete-orphan"
     )

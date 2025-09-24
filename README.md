@@ -1,90 +1,106 @@
-# Examen-1---Grupo-16-Programacion-de-Software
-# Clínica Veterinaria - Sistema de Gestión
+# Sistema de Gestión de Clínica Veterinaria
 
-Este proyecto es un programa de consola en **Python** que permite gestionar una clínica veterinaria de forma sencilla.  
-Los usuarios pueden registrar mascotas, agendar citas, aplicar vacunas y generar facturas de manera interactiva.
+Este proyecto es un sistema de gestión para una clínica veterinaria, desarrollado en **Python** utilizando **SQLAlchemy** como ORM y **PostgreSQL (Neon Database)** como motor de base de datos.  
 
----
-
-## 🚀 Funcionalidades principales
-
-1. **Registrar una mascota**  
-   - Perro, gato o ave.  
-   - Datos básicos (nombre, edad, raza/color/tipo según especie).  
-   - Información del propietario (nombre, teléfono, dirección).  
-
-2. **Agendar una cita**  
-   - Selección de una mascota registrada.  
-   - Fecha, hora y motivo de la cita.  
-
-3. **Aplicar una vacuna**  
-   - Registro de nombre de la vacuna, fecha de aplicación y próxima dosis.  
-
-4. **Generar una factura**  
-   - Selección de una cita ya creada.  
-   - Registro de monto y fecha de emisión.  
+El sistema permite administrar usuarios, propietarios, animales, veterinarios, citas, vacunas y facturas. Incluye autenticación de usuarios mediante un sistema de inicio de sesión.
 
 ---
 
-## 📂 Estructura del proyecto
-📦 ClinicaVeterinaria
-┣ 📂 Clases
-┃ ┣ animal.py
-┃ ┣ cita.py
-┃ ┣ factura.py
-┃ ┣ propietario.py
-┃ ┗ vacuna.py
-┣ main.py
-┗ README.md
+## Características
+
+- **Login y autenticación** con creación automática de usuario administrador si no existen usuarios registrados.  
+- **CRUD completo** para las siguientes entidades:
+  - Usuarios
+  - Propietarios
+  - Animales
+  - Veterinarios
+  - Citas
+  - Vacunas
+  - Facturas  
+- **PostgreSQL + SQLAlchemy ORM** con soporte para UUID.  
 
 ---
 
-## 🛠️ Requisitos
+## Requisitos
 
-- Python 3.8 o superior  
-- No requiere librerías externas (solo `datetime`, que ya viene con Python).
+- Python 3.10 o superior  
+- PostgreSQL (Neon u otra instancia)  
+- Instalar dependencias:  
 
----
+''bash
+- Ejecutar el comando: "pip install sqlalchemy psycopg2-binary"
 
-## ▶️ Cómo ejecutar el programa
+## Configuración
+DATABASE_URL = "postgresql+psycopg2://usuario:password@host:puerto/nombre_bd"
 
-1. Clona este repositorio o descarga el código:
-   ```bash
-   git clone https://github.com/usuario/clinica-veterinaria.git
-   cd clinica-veterinaria
-2. Ejecuta el archivo principal:
-    python main.py
-3. El menú aparecerá en pantalla:
-    --- CLINICA VETERINARIA ---
-    1. Registrar una mascota
-    2. Agendar una cita
-    3. Aplicar una vacuna
-    4. Generar una factura
-    5. Salir
+## Ejecución
+python main.py
 
-📝 Ejemplo de uso:
-**Registrar una mascota**
---- Registrar Mascota ---
-Especie (perro/gato/ave): perro
-Nombre de la mascota: Max
-Edad: 3
+- Si no existen usuarios en la base de datos, se creará automáticamente:
+- Usuario: admin
+- Contraseña: admin123
+- Rol: Administrador
 
---- Datos del propietario ---
-Nombre del propietario: Laura
+## Ejemplo de uso
+1. Ejecua el programa:
+- python main.py
+
+2. Ingresa las credenciales:
+--- INICIO DE SESIÓN ---
+Nombre de usuario: admin
+Contraseña: admin123
+Bienvenido Admin Root
+
+3. Selecciona una opción del menú principal:
+--- CLÍNICA VETERINARIA ---
+1. Menú Usuarios
+2. Menú Propietarios
+3. Menú Mascotas
+4. Menú Veterinarios
+5. Menú Citas
+6. Menú Vacunas
+7. Menú Facturas
+8. Salir
+Selecciona una opción: 2
+
+4. Usa el submenú CRUD correspondiente:
+--- PROPIETARIOS ---
+1. Crear
+2. Ver todos
+3. Ver por ID
+4. Actualizar
+5. Eliminar
+6. Volver al menú principal
+Seleccione: 1
+
+## Ejemplo de creación de propietario:
+--- Crear Propietario ---
+Primer nombre: Juan
+Segundo nombre (opcional, enter para omitir): Carlos
+Primer apellido: Pérez
+Segundo apellido: Gómez
 Teléfono: 3001234567
-Dirección: Calle 123
-Raza: Labrador
+Dirección: Calle 45 # 12 - 34
+Propietario creado: Juan Pérez
 
-Mascota registrada exitosamente:
-Nombre: Max | Especie: Perro | Edad: 3 | Propietario: Laura   
+## Estructura del proyecto
+.
+├── crud/
+│   ├── animal_crud.py
+│   ├── cita_crud.py
+│   ├── factura_crud.py
+│   ├── propietario_crud.py
+│   ├── usuario_crud.py
+│   ├── vacuna_crud.py
+│   └── veterinario_crud.py
+├── database/
+│   └── config.py
+├── Entidades/
+│   ├── (modelos ORM de las entidades)
+├── main.py   # Menú principal
 
-**Agendar una cita**
---- Agendar Cita ---
-Selecciona el número de la mascota: 1
-Fecha y hora de la cita (formato: DD/MM/YYYY HH:MM): 02/09/2025 15:00
-Motivo de la cita: Vacunación
-Cita agendada exitosamente.
-
-Autor
-Proyecto desarrollado como ejemplo de sistema de gestión para una clínica veterinaria en Python.
-Desarrollado por Juan Pablo León Duque y Andrés David Villa Marín
+## Futuras mejoras
+- Validación avanzada de datos.
+- Migrar a API REST con FastAPI o Flask.
+- Reportes automáticos en PDF.
+- Interfaz gráfica o cliente web.

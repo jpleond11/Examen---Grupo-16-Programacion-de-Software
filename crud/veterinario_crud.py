@@ -13,19 +13,31 @@ class VeterinarioCRUD:
     def __init__(self, db: Session):
         self.db = db
 
-    """ Validaciones """
-
     def _validar_email(self, email: str) -> bool:
-        """Validar formato de email"""
+        """
+        Valida que el email tenga un formato correcto.
+
+        Args:
+            email: Dirección de correo a validar.
+
+        Returns:
+            True si el email tiene un formato válido, False en caso contrario.
+        """
         pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         return re.match(pattern, email) is not None
 
     def _validar_telefono(self, telefono: str) -> bool:
-        """Validar formato de teléfono"""
+        """
+        Valida que el teléfono tenga un formato correcto.
+
+        Args:
+            telefono: Número de teléfono a validar.
+
+        Returns:
+            True si el teléfono cumple el formato, False en caso contrario.
+        """
         pattern = r"^\+?[\d\s\-\(\)]{7,15}$"
         return re.match(pattern, telefono) is not None
-
-    """ CRUD """
 
     def crear_veterinario(
         self,
@@ -39,7 +51,25 @@ class VeterinarioCRUD:
         usuario_id_creacion: UUID = None,
     ) -> Veterinario:
         """
-        Crear un nuevo veterinario
+        Crea un nuevo registro de Veterinario en la base de datos.
+
+        Args:
+            primer_nombre: Primer nombre del veterinario (obligatorio).
+            primer_apellido: Primer apellido del veterinario (obligatorio).
+            telefono: Teléfono del veterinario en formato válido.
+            email: Dirección de correo electrónico única y válida.
+            especialidad: Especialidad del veterinario.
+            segundo_nombre: Segundo nombre del veterinario (opcional).
+            segundo_apellido: Segundo apellido del veterinario (opcional).
+            usuario_id_creacion: UUID del usuario que crea el registro.
+
+        Returns:
+            Objeto `Veterinario` creado.
+
+        Raises:
+            ValueError: Si algún campo obligatorio es inválido,
+                        si el email ya existe o
+                        si el usuario de creación no es válido.
         """
         if not primer_nombre or len(primer_nombre.strip()) == 0:
             raise ValueError("El primer nombre es obligatorio")
@@ -73,8 +103,8 @@ class VeterinarioCRUD:
             )
             if not usuario:
                 raise ValueError("El usuario especificado no existe")
-            else:
-                raise ValueError("Debe proporcionar un usuario_id_creacion")
+        else:
+            raise ValueError("Debe proporcionar un usuario_id_creacion")
 
         veterinario = Veterinario(
             primer_nombre_veterinario=primer_nombre.strip(),
@@ -97,7 +127,13 @@ class VeterinarioCRUD:
 
     def obtener_veterinario(self, veterinario_id: UUID) -> Optional[Veterinario]:
         """
-        Obtener un veterinario por ID
+        Obtiene un veterinario por su UUID.
+
+        Args:
+            veterinario_id: UUID del veterinario a consultar.
+
+        Returns:
+            Objeto `Veterinario` si existe, o `None` si no se encuentra.
         """
         return (
             self.db.query(Veterinario)
@@ -109,7 +145,14 @@ class VeterinarioCRUD:
         self, skip: int = 0, limit: int = 100
     ) -> List[Veterinario]:
         """
-        Obtener lista de veterinarios con paginación
+        Obtiene una lista paginada de veterinarios.
+
+        Args:
+            skip: Número de registros a omitir (por defecto 0).
+            limit: Número máximo de registros a devolver (por defecto 100).
+
+        Returns:
+            Lista de objetos `Veterinario`.
         """
         return self.db.query(Veterinario).offset(skip).limit(limit).all()
 
@@ -117,7 +160,19 @@ class VeterinarioCRUD:
         self, veterinario_id: UUID, usuario_id_edicion: UUID, **kwargs
     ) -> Optional[Veterinario]:
         """
-        Actualizar información de un veterinario
+        Actualiza los datos de un veterinario existente.
+
+        Args:
+            veterinario_id: UUID del veterinario a actualizar.
+            usuario_id_edicion: UUID del usuario que edita el registro.
+            kwargs: Campos a actualizar (ejemplo: `telefono`, `email`, `especialidad`).
+
+        Returns:
+            Objeto `Veterinario` actualizado, o `None` si no existe.
+
+        Raises:
+            ValueError: Si el teléfono o email son inválidos,
+                        o si el email ya está registrado.
         """
         veterinario = self.obtener_veterinario(veterinario_id)
         if not veterinario:
@@ -150,7 +205,13 @@ class VeterinarioCRUD:
 
     def eliminar_veterinario(self, veterinario_id: UUID) -> bool:
         """
-        Eliminar un veterinario
+        Elimina un veterinario de la base de datos.
+
+        Args:
+            veterinario_id: UUID del veterinario a eliminar.
+
+        Returns:
+            True si el veterinario fue eliminado, False si no existía.
         """
         veterinario = self.obtener_veterinario(veterinario_id)
         if veterinario:
