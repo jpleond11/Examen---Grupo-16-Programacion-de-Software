@@ -38,6 +38,6 @@ class Usuario(Base):
     password = Column(String(50), nullable=False, index=True)
 
     """ Relaciones """
-    propietarios = relationship(
-        "Propietario", back_populates="usuario", cascade="all, delete-orphan"
-    )
+    propietarios_creados = relationship("Propietario", foreign_keys="Propietario.usuario_id_creacion", back_populates="usuario_creador")
+    propietarios_editados = relationship("Propietario", foreign_keys="Propietario.usuario_id_edicion", back_populates="usuario_editor")
+
