@@ -22,7 +22,21 @@ class FacturaCRUD:
         fecha_emision: Optional[datetime] = None,
     ) -> Factura:
         """
-        Crear una nueva factura
+        Crea un nuevo registro de Factura en la base de datos.
+
+        Args:
+            monto_factura: Valor monetario de la factura (mayor a 0).
+            descripcion_factura: Descripción de la factura (máx. 200 caracteres).
+            cita_id: UUID de la cita asociada.
+            usuario_id_creacion: UUID del usuario que crea el registro.
+            fecha_emision: Fecha de emisión de la factura (por defecto `datetime.now()`).
+
+        Returns:
+            Objeto `Factura` creado.
+
+        Raises:
+            ValueError: Si el monto es inválido, la descripción está vacía o supera los 200 caracteres,
+                        o si el usuario de creación no existe.
         """
         if monto_factura <= 0:
             raise ValueError("El monto de la factura debe ser mayor a 0")
@@ -43,8 +57,8 @@ class FacturaCRUD:
             )
             if not usuario:
                 raise ValueError("El usuario especificado no existe")
-            else:
-                raise ValueError("Debe proporcionar un usuario_id_creacion")
+        else:
+            raise ValueError("Debe proporcionar un usuario_id_creacion")
 
         factura = Factura(
             monto_factura=monto_factura,
@@ -60,19 +74,38 @@ class FacturaCRUD:
 
     def obtener_factura(self, factura_id: UUID) -> Optional[Factura]:
         """
-        Obtener una factura por ID
+        Obtiene una factura por su UUID.
+
+        Args:
+            factura_id: UUID de la factura a consultar.
+
+        Returns:
+            Objeto `Factura` si existe, o `None` si no se encuentra.
         """
         return self.db.query(Factura).filter(Factura.id_factura == factura_id).first()
 
     def obtener_facturas(self, skip: int = 0, limit: int = 100) -> List[Factura]:
         """
-        Obtener lista de facturas con paginación
+        Obtiene una lista paginada de facturas.
+
+        Args:
+            skip: Número de registros a omitir (por defecto 0).
+            limit: Número máximo de registros a devolver (por defecto 100).
+
+        Returns:
+            Lista de objetos `Factura`.
         """
         return self.db.query(Factura).offset(skip).limit(limit).all()
 
     def obtener_facturas_por_cita(self, cita_id: UUID) -> List[Factura]:
         """
-        Obtener todas las facturas asociadas a una cita
+        Obtiene todas las facturas asociadas a una cita.
+
+        Args:
+            cita_id: UUID de la cita.
+
+        Returns:
+            Lista de objetos `Factura`.
         """
         return self.db.query(Factura).filter(Factura.cita_id == cita_id).all()
 
@@ -80,7 +113,14 @@ class FacturaCRUD:
         self, fecha_inicio: datetime, fecha_fin: datetime
     ) -> List[Factura]:
         """
-        Obtener facturas emitidas en un rango de fechas
+        Obtiene las facturas emitidas en un rango de fechas.
+
+        Args:
+            fecha_inicio: Fecha inicial del rango.
+            fecha_fin: Fecha final del rango.
+
+        Returns:
+            Lista de objetos `Factura`.
         """
         return (
             self.db.query(Factura)
@@ -95,7 +135,18 @@ class FacturaCRUD:
         self, factura_id: UUID, usuario_id_edicion: UUID, **kwargs
     ) -> Optional[Factura]:
         """
-        Actualizar una factura
+        Actualiza los datos de una factura existente.
+
+        Args:
+            factura_id: UUID de la factura a actualizar.
+            usuario_id_edicion: UUID del usuario que edita el registro.
+            kwargs: Campos a actualizar (ejemplo: `monto_factura`, `descripcion_factura`).
+
+        Returns:
+            Objeto `Factura` actualizado, o `None` si no existe.
+
+        Raises:
+            ValueError: Si el monto es inválido o la descripción está vacía o excede 200 caracteres.
         """
         factura = self.obtener_factura(factura_id)
         if not factura:
@@ -125,7 +176,13 @@ class FacturaCRUD:
 
     def eliminar_factura(self, factura_id: UUID) -> bool:
         """
-        Eliminar una factura
+        Elimina una factura de la base de datos.
+
+        Args:
+            factura_id: UUID de la factura a eliminar.
+
+        Returns:
+            `True` si la factura fue eliminada, `False` si no existía.
         """
         factura = self.obtener_factura(factura_id)
         if factura:

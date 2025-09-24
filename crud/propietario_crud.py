@@ -23,7 +23,23 @@ class PropietarioCRUD:
         usuario_id_creacion: UUID,
     ) -> Propietario:
         """
-        Crear un nuevo propietario
+        Crea un nuevo registro de Propietario en la base de datos.
+
+        Args:
+            primer_nombre: Primer nombre del propietario (obligatorio).
+            primer_apellido: Primer apellido del propietario (obligatorio).
+            segundo_nombre: Segundo nombre del propietario (opcional).
+            segundo_apellido: Segundo apellido del propietario (obligatorio).
+            telefono: Número de teléfono del propietario.
+            direccion: Dirección del propietario.
+            usuario_id_creacion: UUID del usuario que crea el registro.
+
+        Returns:
+            Objeto `Propietario` creado.
+
+        Raises:
+            ValueError: Si alguno de los campos obligatorios está vacío o
+                        si el usuario de creación no existe.
         """
         if not primer_nombre or len(primer_nombre.strip()) == 0:
             raise ValueError("El primer nombre es obligatorio")
@@ -35,6 +51,7 @@ class PropietarioCRUD:
             raise ValueError("El teléfono es obligatorio")
         if not direccion or len(direccion.strip()) == 0:
             raise ValueError("La dirección es obligatoria")
+
         if usuario_id_creacion is not None:
             from Entidades.UsuarioORM import Usuario
 
@@ -45,8 +62,8 @@ class PropietarioCRUD:
             )
             if not usuario:
                 raise ValueError("El usuario especificado no existe")
-            else:
-                raise ValueError("Debe proporcionar un usuario_id_creacion")
+        else:
+            raise ValueError("Debe proporcionar un usuario_id_creacion")
 
         propietario = Propietario(
             primer_nombre_propietario=primer_nombre.strip(),
@@ -67,7 +84,13 @@ class PropietarioCRUD:
 
     def obtener_propietario(self, propietario_id: UUID) -> Optional[Propietario]:
         """
-        Obtener un propietario por ID
+        Obtiene un propietario por su UUID.
+
+        Args:
+            propietario_id: UUID del propietario a consultar.
+
+        Returns:
+            Objeto `Propietario` si existe, o `None` si no se encuentra.
         """
         return (
             self.db.query(Propietario)
@@ -79,13 +102,26 @@ class PropietarioCRUD:
         self, skip: int = 0, limit: int = 100
     ) -> List[Propietario]:
         """
-        Obtener lista de propietarios con paginación
+        Obtiene una lista paginada de propietarios.
+
+        Args:
+            skip: Número de registros a omitir (por defecto 0).
+            limit: Número máximo de registros a devolver (por defecto 100).
+
+        Returns:
+            Lista de objetos `Propietario`.
         """
         return self.db.query(Propietario).offset(skip).limit(limit).all()
 
     def buscar_por_nombre(self, nombre: str) -> List[Propietario]:
         """
-        Buscar propietarios por primer o segundo nombre
+        Busca propietarios cuyo primer o segundo nombre coincida parcialmente.
+
+        Args:
+            nombre: Nombre (o parte de él) a buscar.
+
+        Returns:
+            Lista de objetos `Propietario` que coinciden con el criterio.
         """
         return (
             self.db.query(Propietario)
@@ -98,7 +134,13 @@ class PropietarioCRUD:
 
     def buscar_por_apellido(self, apellido: str) -> List[Propietario]:
         """
-        Buscar propietarios por apellido (primer o segundo)
+        Busca propietarios cuyo primer o segundo apellido coincida parcialmente.
+
+        Args:
+            apellido: Apellido (o parte de él) a buscar.
+
+        Returns:
+            Lista de objetos `Propietario` que coinciden con el criterio.
         """
         return (
             self.db.query(Propietario)
@@ -113,7 +155,18 @@ class PropietarioCRUD:
         self, propietario_id: UUID, usuario_id_edicion: UUID, **kwargs
     ) -> Optional[Propietario]:
         """
-        Actualizar un propietario
+        Actualiza los datos de un propietario existente.
+
+        Args:
+            propietario_id: UUID del propietario a actualizar.
+            usuario_id_edicion: UUID del usuario que edita el registro.
+            kwargs: Campos a actualizar (ejemplo: `telefono`, `direccion`).
+
+        Returns:
+            Objeto `Propietario` actualizado, o `None` si no existe.
+
+        Raises:
+            ValueError: Si algún campo obligatorio queda vacío.
         """
         propietario = self.obtener_propietario(propietario_id)
         if not propietario:
@@ -162,7 +215,13 @@ class PropietarioCRUD:
 
     def eliminar_propietario(self, propietario_id: UUID) -> bool:
         """
-        Eliminar un propietario
+        Elimina un propietario de la base de datos.
+
+        Args:
+            propietario_id: UUID del propietario a eliminar.
+
+        Returns:
+            `True` si el propietario fue eliminado, `False` si no existía.
         """
         propietario = self.obtener_propietario(propietario_id)
         if propietario:

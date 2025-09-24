@@ -20,7 +20,19 @@ class VacunaCRUD:
         usuario_id_creacion: UUID = None,
     ) -> Vacuna:
         """
-        Crear una nueva vacuna
+        Crea un nuevo registro de Vacuna en la base de datos.
+
+        Args:
+            nombre_vacuna: Nombre de la vacuna (obligatorio).
+            fecha_aplicacion_vacuna: Fecha en la que se aplicó la vacuna.
+            proxima_dosis_vacuna: Fecha de la próxima dosis (opcional).
+            usuario_id_creacion: UUID del usuario que crea el registro.
+
+        Returns:
+            Objeto `Vacuna` creado.
+
+        Raises:
+            ValueError: Si el nombre está vacío o si el usuario de creación no es válido.
         """
         if not nombre_vacuna or len(nombre_vacuna.strip()) == 0:
             raise ValueError("El nombre de la vacuna es obligatorio")
@@ -35,8 +47,8 @@ class VacunaCRUD:
             )
             if not usuario:
                 raise ValueError("El usuario especificado no existe")
-            else:
-                raise ValueError("Debe proporcionar un usuario_id_creacion")
+        else:
+            raise ValueError("Debe proporcionar un usuario_id_creacion")
 
         vacuna = Vacuna(
             nombre_vacuna=nombre_vacuna.strip(),
@@ -51,13 +63,26 @@ class VacunaCRUD:
 
     def obtener_vacuna(self, vacuna_id: UUID) -> Optional[Vacuna]:
         """
-        Obtener una vacuna por su ID
+        Obtiene una vacuna por su UUID.
+
+        Args:
+            vacuna_id: UUID de la vacuna a consultar.
+
+        Returns:
+            Objeto `Vacuna` si existe, o `None` si no se encuentra.
         """
         return self.db.query(Vacuna).filter(Vacuna.id_vacuna == vacuna_id).first()
 
     def obtener_vacunas(self, skip: int = 0, limit: int = 100) -> List[Vacuna]:
         """
-        Obtener una lista de vacunas con paginación
+        Obtiene una lista paginada de vacunas.
+
+        Args:
+            skip: Número de registros a omitir (por defecto 0).
+            limit: Número máximo de registros a devolver (por defecto 100).
+
+        Returns:
+            Lista de objetos `Vacuna`.
         """
         return self.db.query(Vacuna).offset(skip).limit(limit).all()
 
@@ -65,7 +90,18 @@ class VacunaCRUD:
         self, vacuna_id: UUID, usuario_id_edicion: UUID, **kwargs
     ) -> Optional[Vacuna]:
         """
-        Actualizar una vacuna
+        Actualiza los datos de una vacuna existente.
+
+        Args:
+            vacuna_id: UUID de la vacuna a actualizar.
+            usuario_id_edicion: UUID del usuario que edita el registro.
+            kwargs: Campos a actualizar (ejemplo: `nombre_vacuna`, `proxima_dosis_vacuna`).
+
+        Returns:
+            Objeto `Vacuna` actualizado, o `None` si no existe.
+
+        Raises:
+            ValueError: Si el nombre de la vacuna es inválido.
         """
         vacuna = self.obtener_vacuna(vacuna_id)
         if not vacuna:
@@ -88,7 +124,13 @@ class VacunaCRUD:
 
     def eliminar_vacuna(self, vacuna_id: UUID) -> bool:
         """
-        Eliminar una vacuna por ID
+        Elimina una vacuna de la base de datos.
+
+        Args:
+            vacuna_id: UUID de la vacuna a eliminar.
+
+        Returns:
+            True si la vacuna fue eliminada, False si no existía.
         """
         vacuna = self.obtener_vacuna(vacuna_id)
         if vacuna:
