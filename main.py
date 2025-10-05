@@ -66,7 +66,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-=======
 """
 Sistema de gestión de citas de una clínica veterinaria con ORM SQLAlchemy y Neon PostgreSQL
 Incluye sistema de autenticación con login
