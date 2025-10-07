@@ -10,7 +10,9 @@ router = APIRouter(prefix="/animales", tags=["animales"])
 
 
 @router.get("/", response_model=List[AnimalResponse])
-async def obtener_animales(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def obtener_animales(
+    skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
     """Obtener todos los animales con paginación."""
     try:
         animal_crud = AnimalCRUD(db)
@@ -67,7 +69,9 @@ async def crear_animal(animal_data: AnimalCreate, db: Session = Depends(get_db))
 
 
 @router.put("/{animal_id}", response_model=AnimalResponse)
-async def actualizar_animal(animal_id: UUID, animal_data: AnimalUpdate, db: Session = Depends(get_db)):
+async def actualizar_animal(
+    animal_id: UUID, animal_data: AnimalUpdate, db: Session = Depends(get_db)
+):
     """Actualizar un animal existente."""
     try:
         animal_crud = AnimalCRUD(db)
@@ -88,7 +92,9 @@ async def actualizar_animal(animal_id: UUID, animal_data: AnimalUpdate, db: Sess
             return animal_existente
 
         animal_actualizado = animal_crud.actualizar_animal(
-            animal_id, usuario_id_edicion=animal_data.usuario_id_edicion, **campos_actualizacion
+            animal_id,
+            usuario_id_edicion=animal_data.usuario_id_edicion,
+            **campos_actualizacion,
         )
         return animal_actualizado
     except HTTPException:
