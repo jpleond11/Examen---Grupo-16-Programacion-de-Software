@@ -87,8 +87,10 @@ async def actualizar_vacuna(
         if not campos_actualizacion:
             return vacuna_existente
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         vacuna_actualizada = vacuna_crud.actualizar_vacuna(
-            vacuna_id, vacuna_data.usuario_id_edicion, **campos_actualizacion
+            vacuna_id, usuario_id_edicion=usuario_id_edicion, **campos_actualizacion
         )
         return vacuna_actualizada
     except HTTPException:

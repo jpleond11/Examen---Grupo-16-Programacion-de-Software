@@ -88,12 +88,14 @@ async def actualizar_animal(
             k: v for k, v in animal_data.dict().items() if v is not None
         }
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         if not campos_actualizacion:
             return animal_existente
 
         animal_actualizado = animal_crud.actualizar_animal(
             animal_id,
-            usuario_id_edicion=animal_data.usuario_id_edicion,
+            usuario_id_edicion=usuario_id_edicion,
             **campos_actualizacion,
         )
         return animal_actualizado

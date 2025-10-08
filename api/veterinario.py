@@ -101,11 +101,15 @@ async def actualizar_veterinario(
             k: v for k, v in veterinario_data.dict().items() if v is not None
         }
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         if not campos_actualizacion:
             return veterinario_existente
 
         veterinario_actualizado = veterinario_crud.actualizar_veterinario(
-            veterinario_id, veterinario_data.usuario_id_edicion, **campos_actualizacion
+            veterinario_id,
+            usuario_id_edicion=usuario_id_edicion,
+            **campos_actualizacion,
         )
         return veterinario_actualizado
     except HTTPException:

@@ -86,12 +86,14 @@ async def actualizar_factura(
             k: v for k, v in factura_data.dict().items() if v is not None
         }
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         if not campos_actualizacion:
             return factura_existente
 
         factura_actualizada = factura_crud.actualizar_factura(
             factura_id,
-            usuario_id_edicion=factura_data.usuario_id_edicion,
+            usuario_id_edicion=usuario_id_edicion,
             **campos_actualizacion,
         )
         return factura_actualizada

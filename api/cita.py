@@ -90,8 +90,10 @@ async def actualizar_cita(
         if not campos_actualizacion:
             return cita_existente
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         cita_actualizada = cita_crud.actualizar_cita(
-            cita_id, usuario_id_edicion=cita_data.usuario_id_edicion, **campos_actualizacion
+            cita_id, usuario_id_edicion=usuario_id_edicion, **campos_actualizacion
         )
         return cita_actualizada
     except HTTPException:
