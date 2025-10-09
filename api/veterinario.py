@@ -11,6 +11,20 @@ from schemas import (
     RespuestaAPI,
 )
 
+"""
+Módulo de rutas para la gestión de veterinarios.
+
+Contiene los endpoints para realizar operaciones CRUD sobre los veterinarios.
+Permite listar, obtener, crear, actualizar y eliminar registros de veterinarios.
+
+Endpoints:
+- GET /veterinarios/ : Lista todos los veterinarios con paginación.
+- GET /veterinarios/{veterinario_id} : Obtiene un veterinario por su ID.
+- POST /veterinarios/ : Crea un nuevo veterinario.
+- PUT /veterinarios/{veterinario_id} : Actualiza un veterinario existente.
+- DELETE /veterinarios/{veterinario_id} : Elimina un veterinario.
+"""
+
 router = APIRouter(prefix="/veterinarios", tags=["veterinarios"])
 
 

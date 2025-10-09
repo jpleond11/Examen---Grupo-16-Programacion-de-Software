@@ -11,6 +11,20 @@ from schemas import (
     RespuestaAPI,
 )
 
+"""
+Módulo de rutas para la gestión de propietarios.
+
+Incluye los endpoints para realizar operaciones CRUD sobre los propietarios.
+Permite listar, crear, actualizar y eliminar propietarios en la base de datos.
+
+Endpoints:
+- GET /propietarios/ : Lista todos los propietarios con paginación.
+- GET /propietarios/{propietario_id} : Obtiene un propietario por su ID.
+- POST /propietarios/ : Crea un nuevo propietario.
+- PUT /propietarios/{propietario_id} : Actualiza un propietario existente.
+- DELETE /propietarios/{propietario_id} : Elimina un propietario.
+"""
+
 router = APIRouter(prefix="/propietarios", tags=["propietarios"])
 
 

@@ -7,6 +7,20 @@ from uuid import UUID
 from datetime import datetime
 from schemas import FacturaCreate, FacturaResponse, FacturaUpdate, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de facturas.
+
+Contiene los endpoints para realizar operaciones CRUD sobre las facturas.
+Permite listar, crear, actualizar y eliminar facturas registradas en la base de datos.
+
+Endpoints:
+- GET /facturas/ : Lista todas las facturas con paginación.
+- GET /facturas/{factura_id} : Obtiene una factura por su ID.
+- POST /facturas/ : Crea una nueva factura.
+- PUT /facturas/{factura_id} : Actualiza una factura existente.
+- DELETE /facturas/{factura_id} : Elimina una factura.
+"""
+
 router = APIRouter(prefix="/facturas", tags=["facturas"])
 
 

@@ -6,6 +6,20 @@ from typing import List
 from uuid import UUID
 from schemas import AnimalCreate, AnimalResponse, AnimalUpdate, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de animales.
+
+Este archivo define los endpoints relacionados con las operaciones CRUD de animales.
+Incluye funciones para obtener, crear, actualizar y eliminar registros en la base de datos.
+
+Endpoints:
+- GET /animales/ : Lista todos los animales con paginación.
+- GET /animales/{animal_id} : Obtiene un animal por su ID.
+- POST /animales/ : Crea un nuevo animal.
+- PUT /animales/{animal_id} : Actualiza un animal existente.
+- DELETE /animales/{animal_id} : Elimina un animal.
+"""
+
 router = APIRouter(prefix="/animales", tags=["animales"])
 
 

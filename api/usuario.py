@@ -6,6 +6,20 @@ from typing import List
 from uuid import UUID
 from schemas import UsuarioCreate, UsuarioResponse, UsuarioUpdate, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de usuarios.
+
+Contiene los endpoints para realizar operaciones CRUD sobre los usuarios.
+Permite listar, crear, actualizar y eliminar usuarios en la base de datos.
+
+Endpoints:
+- GET /usuarios/ : Lista todos los usuarios con paginación.
+- GET /usuarios/{usuario_id} : Obtiene un usuario por su ID.
+- POST /usuarios/ : Crea un nuevo usuario.
+- PUT /usuarios/{usuario_id} : Actualiza un usuario existente.
+- DELETE /usuarios/{usuario_id} : Elimina un usuario.
+"""
+
 router = APIRouter(prefix="/usuarios", tags=["usuarios"])
 
 

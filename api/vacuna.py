@@ -6,6 +6,20 @@ from typing import List
 from uuid import UUID
 from schemas import VacunaCreate, VacunaUpdate, VacunaResponse, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de vacunas.
+
+Contiene los endpoints para realizar operaciones CRUD sobre las vacunas.
+Permite listar, obtener, crear, actualizar y eliminar registros de vacunas.
+
+Endpoints:
+- GET /vacunas/ : Lista todas las vacunas con paginación.
+- GET /vacunas/{vacuna_id} : Obtiene una vacuna por su ID.
+- POST /vacunas/ : Crea una nueva vacuna.
+- PUT /vacunas/{vacuna_id} : Actualiza una vacuna existente.
+- DELETE /vacunas/{vacuna_id} : Elimina una vacuna.
+"""
+
 router = APIRouter(prefix="/vacunas", tags=["vacunas"])
 
 

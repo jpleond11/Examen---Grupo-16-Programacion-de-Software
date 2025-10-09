@@ -6,6 +6,20 @@ from typing import List
 from uuid import UUID
 from schemas import CitaBase, CitaCreate, CitaResponse, CitaUpdate, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de citas.
+
+Define los endpoints para realizar operaciones CRUD sobre las citas.
+Permite obtener, crear, actualizar y eliminar citas en la base de datos.
+
+Endpoints:
+- GET /citas/ : Lista todas las citas con paginación.
+- GET /citas/{cita_id} : Obtiene una cita por su ID.
+- POST /citas/ : Crea una nueva cita.
+- PUT /citas/{cita_id} : Actualiza una cita existente.
+- DELETE /citas/{cita_id} : Elimina una cita.
+"""
+
 router = APIRouter(prefix="/citas", tags=["citas"])
 
 
