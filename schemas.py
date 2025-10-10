@@ -2,55 +2,53 @@
 Modelos Pydantic para las respuestas de la API
 """
 
-from datetime import datetime
+from datetime import datetime, date
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
-# Modelos base para Usuario
 class UsuarioBase(BaseModel):
-    nombre: str
+    primer_nombre_usuario: str
+    segundo_nombre_usuario: Optional[str] = None
+    primer_apellido_usuario: str
+    segundo_apellido_usuario: Optional[str] = None
+    rol_usuario: str
+    fecha_nacimiento_usuario: date
     nombre_usuario: str
-    email: EmailStr
-    telefono: Optional[str] = None
-    es_admin: bool = False
+    password: str
 
 
 class UsuarioCreate(UsuarioBase):
-    contraseña: str
+    pass
 
 
 class UsuarioUpdate(BaseModel):
-    nombre: Optional[str] = None
+    primer_nombre_usuario: Optional[str] = None
+    segundo_nombre_usuario: Optional[str] = None
+    primer_apellido_usuario: Optional[str] = None
+    segundo_apellido_usuario: Optional[str] = None
+    rol_usuario: Optional[str] = None
+    fecha_nacimiento_usuario: Optional[date] = None
     nombre_usuario: Optional[str] = None
-    email: Optional[EmailStr] = None
-    telefono: Optional[str] = None
-    es_admin: Optional[bool] = None
-    activo: Optional[bool] = None
+    password: Optional[str] = None
 
 
 class UsuarioResponse(UsuarioBase):
-    id: UUID
-    activo: bool
-    fecha_creacion: datetime
-    fecha_edicion: Optional[datetime] = None
+    id_usuario: UUID
+    primer_nombre_usuario: str
+    segundo_nombre_usuario: Optional[str]
+    primer_apellido_usuario: str
+    segundo_apellido_usuario: Optional[str]
+    rol_usuario: str
+    fecha_nacimiento_usuario: date
+    nombre_usuario: str
 
     class Config:
         from_attributes = True
 
 
-class UsuarioLogin(BaseModel):
-    nombre_usuario: str
-    contraseña: str
-
-
-class CambioContraseña(BaseModel):
-    contraseña_actual: str
-    nueva_contraseña: str
-
-# Modelo para cita
 class CitaBase(BaseModel):
     fecha_inicio_cita: datetime
     fecha_final_cita: Optional[datetime] = None
@@ -61,8 +59,10 @@ class CitaBase(BaseModel):
     usuario_id_creacion: UUID
     usuario_id_edicion: Optional[UUID] = None
 
+
 class CitaCreate(CitaBase):
     pass
+
 
 class CitaUpdate(BaseModel):
     fecha_inicio_cita: Optional[datetime] = None
@@ -73,6 +73,7 @@ class CitaUpdate(BaseModel):
     veterinario_id: Optional[UUID] = None
     usuario_id_edicion: Optional[UUID] = None
 
+
 class CitaResponse(CitaBase):
     id_cita: UUID
     fecha_creacion: datetime
@@ -81,11 +82,13 @@ class CitaResponse(CitaBase):
     class Config:
         from_attributes = True
 
+
 class RespuestaAPI(BaseModel):
     mensaje: str
     exito: bool
     detalle: Optional[str] = None
     data: Optional[dict] = None
+
     class Config:
         schema_extra = {
             "example": {
@@ -96,7 +99,7 @@ class RespuestaAPI(BaseModel):
             }
         }
 
-# Modelo para factura
+
 class FacturaBase(BaseModel):
     monto_factura: float
     fecha_emision: Optional[datetime] = None
@@ -105,8 +108,10 @@ class FacturaBase(BaseModel):
     usuario_id_creacion: UUID
     usuario_id_edicion: Optional[UUID] = None
 
+
 class FacturaCreate(FacturaBase):
     pass
+
 
 class FacturaUpdate(BaseModel):
     monto_factura: Optional[float] = None
@@ -114,6 +119,7 @@ class FacturaUpdate(BaseModel):
     descripcion_factura: Optional[str] = None
     cita_id: Optional[UUID] = None
     usuario_id_edicion: Optional[UUID] = None
+
 
 class FacturaResponse(FacturaBase):
     id_factura: UUID
@@ -123,28 +129,29 @@ class FacturaResponse(FacturaBase):
     class Config:
         from_attributes = True
 
-# Modelos base para Animal
+
 class AnimalBase(BaseModel):
     nombre_animal: str
-    especie: str
-    raza: Optional[str] = None
-    edad: Optional[int] = None
-    peso: Optional[float] = None
+    especie_animal: str
+    fecha_nacimiento_animal: date
     propietario_id: UUID
+    categoria_id: UUID
     usuario_id_creacion: UUID
     usuario_id_edicion: Optional[UUID] = None
+
 
 class AnimalCreate(AnimalBase):
     pass
 
+
 class AnimalUpdate(BaseModel):
     nombre_animal: Optional[str] = None
-    especie: Optional[str] = None
-    raza: Optional[str] = None
-    edad: Optional[int] = None
-    peso: Optional[float] = None
+    especie_animal: Optional[str] = None
+    fecha_nacimiento_animal: Optional[date] = None
     propietario_id: Optional[UUID] = None
+    categoria_id: Optional[UUID] = None
     usuario_id_edicion: Optional[UUID] = None
+
 
 class AnimalResponse(AnimalBase):
     id_animal: UUID
@@ -154,30 +161,41 @@ class AnimalResponse(AnimalBase):
     class Config:
         from_attributes = True
 
-# Modelos base para Propietario
+
 class PropietarioBase(BaseModel):
-    primer_nombre: str
-    segundo_nombre: Optional[str] = None
-    primer_apellido: str
-    segundo_apellido: Optional[str] = None
-    direccion: Optional[str] = None
-    telefono: Optional[str] = None
-    email: Optional[EmailStr] = None
+    primer_nombre_propietario: str = Field(
+        ..., max_length=50, description="Primer nombre del propietario"
+    )
+    segundo_nombre_propietario: Optional[str] = Field(
+        None, max_length=50, description="Segundo nombre del propietario"
+    )
+    primer_apellido_propietario: str = Field(
+        ..., max_length=50, description="Primer apellido del propietario"
+    )
+    segundo_apellido_propietario: str = Field(
+        ..., max_length=50, description="Segundo apellido del propietario"
+    )
+    telefono: str = Field(
+        ..., max_length=20, description="Número de teléfono del propietario"
+    )
+    direccion: str = Field(..., max_length=200, description="Dirección del propietario")
     usuario_id_creacion: UUID
     usuario_id_edicion: Optional[UUID] = None
+
 
 class PropietarioCreate(PropietarioBase):
     pass
 
+
 class PropietarioUpdate(BaseModel):
-    primer_nombre: Optional[str] = None
-    segundo_nombre: Optional[str] = None
-    primer_apellido: Optional[str] = None
-    segundo_apellido: Optional[str] = None
-    direccion: Optional[str] = None
-    telefono: Optional[str] = None
-    email: Optional[EmailStr] = None
+    primer_nombre_propietario: Optional[str] = Field(None, max_length=50)
+    segundo_nombre_propietario: Optional[str] = Field(None, max_length=50)
+    primer_apellido_propietario: Optional[str] = Field(None, max_length=50)
+    segundo_apellido_propietario: Optional[str] = Field(None, max_length=50)
+    telefono: Optional[str] = Field(None, max_length=20)
+    direccion: Optional[str] = Field(None, max_length=200)
     usuario_id_edicion: Optional[UUID] = None
+
 
 class PropietarioResponse(PropietarioBase):
     id_propietario: UUID
@@ -187,30 +205,33 @@ class PropietarioResponse(PropietarioBase):
     class Config:
         from_attributes = True
 
-# Modelos base para Veterinario
+
 class VeterinarioBase(BaseModel):
-    primer_nombre: str
-    segundo_nombre: Optional[str] = None
-    primer_apellido: str
-    segundo_apellido: Optional[str] = None
-    especialidad: Optional[str] = None
-    telefono: Optional[str] = None
+    primer_nombre_veterinario: str
+    segundo_nombre_veterinario: Optional[str] = None
+    primer_apellido_veterinario: str
+    segundo_apellido_veterinario: Optional[str] = None
+    telefono: str
     email: EmailStr
+    especialidad: str
     usuario_id_creacion: UUID
-    usuario_id_edicion: Optional[UUID] = None   
+    usuario_id_edicion: Optional[UUID] = None
+
 
 class VeterinarioCreate(VeterinarioBase):
     pass
 
+
 class VeterinarioUpdate(BaseModel):
-    primer_nombre: Optional[str] = None
-    segundo_nombre: Optional[str] = None
-    primer_apellido: Optional[str] = None
-    segundo_apellido: Optional[str] = None
-    especialidad: Optional[str] = None
+    primer_nombre_veterinario: Optional[str] = None
+    segundo_nombre_veterinario: Optional[str] = None
+    primer_apellido_veterinario: Optional[str] = None
+    segundo_apellido_veterinario: Optional[str] = None
     telefono: Optional[str] = None
     email: Optional[EmailStr] = None
+    especialidad: Optional[str] = None
     usuario_id_edicion: Optional[UUID] = None
+
 
 class VeterinarioResponse(VeterinarioBase):
     id_veterinario: UUID
@@ -220,52 +241,28 @@ class VeterinarioResponse(VeterinarioBase):
     class Config:
         from_attributes = True
 
-# Modelos base para Vacuna
+
 class VacunaBase(BaseModel):
     nombre_vacuna: str
-    descripcion_vacuna: Optional[str] = None
-    fecha_administracion: Optional[datetime] = None
-    proxima_dosis: Optional[datetime] = None
-    animal_id: UUID
+    fecha_aplicacion_vacuna: date
+    proxima_dosis_vacuna: Optional[date] = None
     usuario_id_creacion: UUID
     usuario_id_edicion: Optional[UUID] = None
+
 
 class VacunaCreate(VacunaBase):
     pass
 
+
 class VacunaUpdate(BaseModel):
     nombre_vacuna: Optional[str] = None
-    descripcion_vacuna: Optional[str] = None
-    fecha_administracion: Optional[datetime] = None
-    proxima_dosis: Optional[datetime] = None
-    animal_id: Optional[UUID] = None
+    fecha_aplicacion_vacuna: Optional[date] = None
+    proxima_dosis_vacuna: Optional[date] = None
     usuario_id_edicion: Optional[UUID] = None
+
 
 class VacunaResponse(VacunaBase):
     id_vacuna: UUID
-    fecha_creacion: datetime
-    fecha_actualizacion: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
-
-# Modelos base para Rol
-class RolBase(BaseModel):
-    nombre_rol: str
-    descripcion_rol: Optional[str] = None
-    usuario_id_creacion: UUID
-    usuario_id_edicion: Optional[UUID] = None
-
-class RolCreate(RolBase):
-    pass
-
-class RolUpdate(BaseModel):
-    nombre_rol: Optional[str] = None
-    descripcion_rol: Optional[str] = None
-    usuario_id_edicion: Optional[UUID] = None
-    
-class RolResponse(RolBase):
-    id_rol: UUID
     fecha_creacion: datetime
     fecha_actualizacion: Optional[datetime] = None
 
