@@ -6,11 +6,27 @@ from typing import List
 from uuid import UUID
 from schemas import AnimalCreate, AnimalResponse, AnimalUpdate, RespuestaAPI
 
+"""
+Módulo de rutas para la gestión de animales.
+
+Este archivo define los endpoints relacionados con las operaciones CRUD de animales.
+Incluye funciones para obtener, crear, actualizar y eliminar registros en la base de datos.
+
+Endpoints:
+- GET /animales/ : Lista todos los animales con paginación.
+- GET /animales/{animal_id} : Obtiene un animal por su ID.
+- POST /animales/ : Crea un nuevo animal.
+- PUT /animales/{animal_id} : Actualiza un animal existente.
+- DELETE /animales/{animal_id} : Elimina un animal.
+"""
+
 router = APIRouter(prefix="/animales", tags=["animales"])
 
 
 @router.get("/", response_model=List[AnimalResponse])
-async def obtener_animales(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def obtener_animales(
+    skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
+):
     """Obtener todos los animales con paginación."""
     try:
         animal_crud = AnimalCRUD(db)
@@ -67,7 +83,9 @@ async def crear_animal(animal_data: AnimalCreate, db: Session = Depends(get_db))
 
 
 @router.put("/{animal_id}", response_model=AnimalResponse)
-async def actualizar_animal(animal_id: UUID, animal_data: AnimalUpdate, db: Session = Depends(get_db)):
+async def actualizar_animal(
+    animal_id: UUID, animal_data: AnimalUpdate, db: Session = Depends(get_db)
+):
     """Actualizar un animal existente."""
     try:
         animal_crud = AnimalCRUD(db)
@@ -84,11 +102,15 @@ async def actualizar_animal(animal_id: UUID, animal_data: AnimalUpdate, db: Sess
             k: v for k, v in animal_data.dict().items() if v is not None
         }
 
+        usuario_id_edicion = campos_actualizacion.pop("usuario_id_edicion", None)
+
         if not campos_actualizacion:
             return animal_existente
 
         animal_actualizado = animal_crud.actualizar_animal(
-            animal_id, usuario_id_edicion=animal_data.usuario_id_edicion, **campos_actualizacion
+            animal_id,
+            usuario_id_edicion=usuario_id_edicion,
+            **campos_actualizacion,
         )
         return animal_actualizado
     except HTTPException:
