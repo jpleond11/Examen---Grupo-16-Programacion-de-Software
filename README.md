@@ -1,106 +1,127 @@
-# Sistema de Gestión de Clínica Veterinaria
+# Sistema de Gestión de Veterinaria
 
-Este proyecto es un sistema de gestión para una clínica veterinaria, desarrollado en **Python** utilizando **SQLAlchemy** como ORM y **PostgreSQL (Neon Database)** como motor de base de datos.  
-
-El sistema permite administrar usuarios, propietarios, animales, veterinarios, citas, vacunas y facturas. Incluye autenticación de usuarios mediante un sistema de inicio de sesión.
-
----
-
-## Características
-
-- **Login y autenticación** con creación automática de usuario administrador si no existen usuarios registrados.  
-- **CRUD completo** para las siguientes entidades:
-  - Usuarios
-  - Propietarios
-  - Animales
-  - Veterinarios
-  - Citas
-  - Vacunas
-  - Facturas  
-- **PostgreSQL + SQLAlchemy ORM** con soporte para UUID.  
+API REST desarrollada con **FastAPI**, **SQLAlchemy** y **PostgreSQL (Neon)** para la gestión integral de una clínica veterinaria.  
+Permite administrar **usuarios, animales, propietarios, citas, facturas, vacunas y veterinarios** con validaciones y control de relaciones entre entidades.
 
 ---
 
-## Requisitos
+## Características principales
 
-- Python 3.10 o superior  
-- PostgreSQL (Neon u otra instancia)  
-- Instalar dependencias:  
+- Gestión completa de entidades con operaciones **CRUD**.
+- Validaciones avanzadas de campos y relaciones (fechas, montos, existencia de usuarios, etc.).
+- Control de usuarios creadores y editores.
+- Integración con **Neon PostgreSQL** mediante SQLAlchemy.
+- Documentación automática en Swagger (`/docs`) y Redoc (`/redoc`).
+- Soporte de **CORS** para integraciones externas.
+- Schemas unificados en un solo archivo: `schemas.py`.
 
-''bash
-- Ejecutar el comando: "pip install sqlalchemy psycopg2-binary"
-
-## Configuración
-DATABASE_URL = "postgresql+psycopg2://usuario:password@host:puerto/nombre_bd"
-
-## Ejecución
-python main.py
-
-- Si no existen usuarios en la base de datos, se creará automáticamente:
-- Usuario: admin
-- Contraseña: admin123
-- Rol: Administrador
-
-## Ejemplo de uso
-1. Ejecua el programa:
-- python main.py
-
-2. Ingresa las credenciales:
---- INICIO DE SESIÓN ---
-Nombre de usuario: admin
-Contraseña: admin123
-Bienvenido Admin Root
-
-3. Selecciona una opción del menú principal:
---- CLÍNICA VETERINARIA ---
-1. Menú Usuarios
-2. Menú Propietarios
-3. Menú Mascotas
-4. Menú Veterinarios
-5. Menú Citas
-6. Menú Vacunas
-7. Menú Facturas
-8. Salir
-Selecciona una opción: 2
-
-4. Usa el submenú CRUD correspondiente:
---- PROPIETARIOS ---
-1. Crear
-2. Ver todos
-3. Ver por ID
-4. Actualizar
-5. Eliminar
-6. Volver al menú principal
-Seleccione: 1
-
-## Ejemplo de creación de propietario:
---- Crear Propietario ---
-Primer nombre: Juan
-Segundo nombre (opcional, enter para omitir): Carlos
-Primer apellido: Pérez
-Segundo apellido: Gómez
-Teléfono: 3001234567
-Dirección: Calle 45 # 12 - 34
-Propietario creado: Juan Pérez
+---
 
 ## Estructura del proyecto
-.
+Clínica Veterinaria
+├── api/
+│ ├── animal.py
+│ ├── cita.py
+│ ├── factura.py
+│ ├── propietario.py
+│ ├── usuario.py
+│ ├── vacuna.py
+│ └── veterinario.py
+│
 ├── crud/
-│   ├── animal_crud.py
-│   ├── cita_crud.py
-│   ├── factura_crud.py
-│   ├── propietario_crud.py
-│   ├── usuario_crud.py
-│   ├── vacuna_crud.py
-│   └── veterinario_crud.py
-├── database/
-│   └── config.py
+│ ├── AnimalCRUD.py
+│ ├── CitaCRUD.py
+│ ├── FacturaCRUD.py
+│ ├── PropietarioCRUD.py
+│ ├── UsuarioCRUD.py
+│ ├── VacunaCRUD.py
+│ └── VeterinarioCRUD.py
+│
 ├── Entidades/
-│   ├── (modelos ORM de las entidades)
-├── main.py   # Menú principal
+│ ├── Animal.py
+│ ├── Cita.py
+│ ├── Factura.py
+│ ├── Propietario.py
+│ ├── Usuario.py
+│ ├── Vacuna.py
+│ └── Veterinario.py
+│
+├── database/
+│ └── config.py
+│
+├── schemas.py
+├── main.py
+├── requirements.txt
+└── README.md
 
-## Futuras mejoras
-- Validación avanzada de datos.
-- Migrar a API REST con FastAPI o Flask.
-- Reportes automáticos en PDF.
-- Interfaz gráfica o cliente web.
+---
+
+## Instalación y configuración
+
+### 1. Clonar el repositorio
+
+'''bash
+git clone https://github.com/jpleond11/Examen-1---Grupo-16-Programacion-de-Software
+cd Examen-1---Grupo-16-Programacion-de-Software
+
+### 2. Crear entorno virtual
+
+python3 -m venv venv
+source venv/bin/activate      # Mac/Linux
+# o en Windows:
+# venv\Scripts\activate
+
+### 3. Instalar dependencias
+
+pip install -r requirements.txt
+
+### 4. Configurar las variables de entorno
+
+Crea un archivo .env dentro del directorio database/ con tu cadena de conexión:
+
+DATABASE_URL=postgresql+psycopg2://usuario:contraseña@host/neon_db
+
+## Ejecución del proyecto
+Para correr el servidor, ejecuta el siguiente comando desde la raíz del proyecto:
+-- python main.py
+El servidor se iniciará en:
+-- http://localhost:8000
+
+## Documentación de la API
+Una vez en ejecución, puedes acceder a:
+Swagger UI: http://localhost:8000/docs
+Redoc: http://localhost:8000/redoc
+
+## Endpoints principales
+| Módulo       | Endpoint base   | Descripción                                 |
+| ------------ | --------------- | ------------------------------------------- |
+| Usuarios     | `/usuarios`     | CRUD de usuarios y autenticación            |
+| Animales     | `/animales`     | CRUD de animales y control de propietarios  |
+| Propietarios | `/propietarios` | CRUD de propietarios                        |
+| Veterinarios | `/veterinarios` | CRUD de veterinarios                        |
+| Vacunas      | `/vacunas`      | CRUD de vacunas                             |
+| Citas        | `/citas`        | CRUD de citas con validación de fechas      |
+| Facturas     | `/facturas`     | CRUD de facturas y filtros por cita o fecha |
+
+## Ejemplo de uso (usuarios)
+
+POST /usuarios/crear:
+{
+  "primer_nombre_usuario": "Juan",
+  "rol_usuario": "admin",
+  "fecha_nacimiento_usuario": "1995-04-10",
+  "nombre_usuario": "juanp",
+  "password": "123456",
+  "email_usuario": "juanp@example.com"
+}
+
+Respuesta:
+{
+  "mensaje": "Usuario creado correctamente",
+  "usuario_id": 1
+}
+
+## Licencia
+
+Este proyecto fue desarrollado con fines educativos y puede ser adaptado libremente.
+Autores: Juan Pablo León Duque, Andrés David Villa Marín.
