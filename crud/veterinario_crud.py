@@ -184,15 +184,23 @@ class VeterinarioCRUD:
             kwargs["telefono"] = kwargs["telefono"].strip()
 
         if "email" in kwargs and kwargs["email"]:
-            if not self._validar_email(kwargs["email"]):
+            nuevo_email = kwargs["email"].lower().strip()
+
+            if not self._validar_email(nuevo_email):
                 raise ValueError("Email inválido")
-            if (
+
+            veterinario_existente = (
                 self.db.query(Veterinario)
-                .filter(Veterinario.email == kwargs["email"].lower().strip())
+                .filter(
+                    Veterinario.email == nuevo_email,
+                    Veterinario.id_veterinario != veterinario_id,
+                )
                 .first()
-            ):
+            )
+            if veterinario_existente:
                 raise ValueError("El email ya está registrado")
-            kwargs["email"] = kwargs["email"].lower().strip()
+
+            kwargs["email"] = nuevo_email
 
         for key, value in kwargs.items():
             if hasattr(veterinario, key):
