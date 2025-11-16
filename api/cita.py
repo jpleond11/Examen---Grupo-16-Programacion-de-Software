@@ -57,6 +57,20 @@ async def obtener_cita(cita_id: UUID, db: Session = Depends(get_db)):
         )
 
 
+@router.get("/ultimos/3-meses", response_model=List[CitaResponse])
+async def obtener_citas_ultimos_3_meses(db: Session = Depends(get_db)):
+    """Obtiene las citas registradas en los últimos 3 meses."""
+    try:
+        cita_crud = CitaCRUD(db)
+        citas = cita_crud.obtener_citas_ultimos_3_meses()
+        return citas
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al obtener citas de los últimos 3 meses: {str(e)}",
+        )
+
+
 @router.post("/", response_model=CitaResponse, status_code=status.HTTP_201_CREATED)
 async def crear_cita(cita_data: CitaCreate, db: Session = Depends(get_db)):
     """Crear una nueva cita."""
