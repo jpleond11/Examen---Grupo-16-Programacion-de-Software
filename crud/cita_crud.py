@@ -4,7 +4,7 @@ Operaciones CRUD para Cita
 
 from typing import List, Optional
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from Entidades.CitaORM import Cita
 
@@ -127,6 +127,18 @@ class CitaCRUD:
             Lista de objetos `Cita`.
         """
         return self.db.query(Cita).filter(Cita.veterinario_id == veterinario_id).all()
+
+    def obtener_citas_ultimos_3_meses(self) -> List[Cita]:
+        """
+        Obtiene todas las citas registradas en los últimos 3 meses.
+        """
+        fecha_limite = datetime.now() - timedelta(days=90)
+        return (
+            self.db.query(Cita)
+            .filter(Cita.fecha_inicio_cita >= fecha_limite)
+            .order_by(Cita.fecha_inicio_cita.asc())
+            .all()
+        )
 
     def actualizar_cita(
         self, cita_id: UUID, usuario_id_edicion: UUID, **kwargs
